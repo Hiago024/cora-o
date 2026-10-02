@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Landing Page</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --bg-soft: #111827;
+        --panel: rgba(15, 23, 42, 0.8);
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --accent: #a78bfa;
+        --success: #34d399;
+        --border: rgba(148, 163, 184, 0.2);
+        --shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: radial-gradient(circle at top, #172554 0%, var(--bg) 40%, #020617 100%);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(12px);
+        background: rgba(2, 6, 23, 0.55);
+        border-bottom: 1px solid var(--border);
+        z-index: 10;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 72px;
+      }
+
+      .brand {
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand span {
+        color: var(--primary);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .button {
+        display: inline-block;
+        padding: 0.9rem 1.4rem;
+        border-radius: 999px;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #020617;
+        box-shadow: var(--shadow);
+      }
+
+      .button.secondary {
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.5);
+        color: var(--text);
+      }
+
+      .hero {
+        padding: 120px 0 80px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 36px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(56, 189, 248, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        color: var(--primary);
+        border-radius: 999px;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 22px 0 18px;
+        font-size: clamp(2.8rem, 5vw, 5rem);
+        line-height: 1.04;
+        letter-spacing: -0.06em;
+      }
+
+      .hero p {
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 1.08rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .stats {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 32px;
+      }
+
+      .stat {
+        min-width: 140px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.6rem;
+        color: var(--text);
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(17, 24, 39, 0.7));
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+      }
+
+      .dashboard {
+        padding: 22px;
+      }
+
+      .mini-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
+      }
+
+      .chart {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        height: 220px;
+        display: flex;
+        align-items: end;
+        gap: 10px;
+      }
+
+      .bar {
+        flex: 1;
+        border-radius: 10px 10px 0 0;
+        background: linear-gradient(180deg, var(--primary), var(--accent));
+        box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+      }
+
+      .bar:nth-child(1) { height: 35%; }
+      .bar:nth-child(2) { height: 52%; }
+      .bar:nth-child(3) { height: 68%; }
+      .bar:nth-child(4) { height: 80%; }
+      .bar:nth-child(5) { height: 58%; }
+      .bar:nth-child(6) { height: 92%; }
+      .bar:nth-child(7) { height: 100%; }
+
+      .floating-card {
+        position: absolute;
+        right: -16px;
+        bottom: 28px;
+        width: 180px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+
+      .floating-card small {
+        color: var(--muted);
+        display: block;
+      }
+
+      .floating-card strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.7rem;
+      }
+
+      .features {
+        padding: 40px 0 90px;
+      }
+
+      .section-header {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 40px;
+      }
+
+      .section-header h2 {
+        font-size: clamp(2rem, 3vw, 3rem);
+        margin: 12px 0 10px;
+      }
+
+      .section-header p {
+        color: var(--muted);
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .feature-item {
+        padding: 30px 22px;
+      }
+
+      .icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(167, 139, 250, 0.2));
+        color: var(--primary);
+        font-size: 1.5rem;
+        margin-bottom: 18px;
+      }
+
+      .feature-item h3 {
+        margin: 0 0 10px;
+        font-size: 1.2rem;
+      }
+
+      .feature-item p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .cta {
+        padding: 0 0 90px;
+      }
+
+      .cta-box {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(167, 139, 250, 0.08));
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        padding: 36px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .cta-box h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+      }
+
+      .cta-box p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        padding: 26px 0 38px;
+      }
+
+      @media (max-width: 800px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero-grid,
+        .feature-grid,
+        .cta-box {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+
+        .cta-box {
+          text-align: center;
+          justify-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <a href="#" class="brand"><span>Nova</span>Studio</a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a href="#contact" class="button secondary">Book a call</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">New growth platform</div>
+            <h1>Build bold ideas into measurable results.</h1>
+            <p>
+              We help teams launch faster, simplify complex workflows, and turn ideas into
+              sustainable growth with smart strategy and elegant design.
+            </p>
+            <div class="hero-actions">
+              <a href="#contact" class="button primary">Get started</a>
+              <a href="#features" class="button secondary">See features</a>
+            </div>
+            <div class="stats" aria-label="company stats">
+              <div class="stat">
+                <strong>4.9/5</strong>
+                <span>Average rating</span>
+              </div>
+              <div class="stat">
+                <strong>12k+</strong>
+                <span>Projects shipped</span>
+              </div>
+              <div class="stat">
+                <strong>3x</strong>
+                <span>Faster launches</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card dashboard" aria-label="Analytics dashboard preview">
+            <div class="mini-header">
+              <span>Performance</span>
+              <span class="dot" aria-label="active"></span>
+            </div>
+            <div class="chart" aria-hidden="true">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+            <div class="floating-card">
+              <small>Monthly growth</small>
+              <strong>+46%</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Why teams choose us</div>
+            <h2>Everything you need to scale with confidence.</h2>
+            <p>
+              Strategic support, product clarity, and execution systems designed to make growth feel simple.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="card feature-item">
+              <div class="icon">⚡</div>
+              <h3>Rapid execution</h3>
+              <p>Turn priorities into momentum with a focused process built for speed and clarity.</p>
+            </article>
+
+            <article class="card feature-item">
+              <div class="icon">📈</div>
+              <h3>Data-informed decisions</h3>
+              <p>Track the metrics that matter and uncover the actions that drive meaningful improvement.</p>
+            </article>
+
+            <article class="card feature-item">
+              <div class="icon">🎯</div>
+              <h3>Clear user journeys</h3>
+              <p>Create seamless experiences that keep customers engaged, confident, and ready to act.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="contact">
+        <div class="container">
+          <div class="cta-box">
+            <div>
+              <h3>Ready to build your next big move?</h3>
+              <p>Let’s turn your vision into a focused plan that delivers results.</p>
+            </div>
+            <a href="mailto:hello@novastudio.example" class="button primary">hello@novastudio.example</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <div>© 2026 NovaStudio</div>
+        <div>Strategy • Design • Growth</div>
+      </div>
+    </footer>
+  </body>
+</html>
