@@ -18,7 +18,50 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: sans-serif;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height, centerX, centerY, scale;
+
+    function resize() {
+      width = canvas.width = window.innerWidthEntendido! Para garantir que o código fique extremamente leve e rode de forma bem fluida (60 FPS) em qualquer celular ou navegador sem travar nem dar erro no servidor, o segredo é otimizar o uso das partículas.
+
+No código do vídeo aparecem variáveis como `FLOAT_COUNT = 140` e a paleta `BLUE_SHADES` (`#38a2f6`, `#00a8ff`, `#256beb`, `#8fe0fe`).
+
+Aqui está o código `index.html` ultra otimizado, leve e pronto para rodar sem travamentos:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coração Azul Fluido</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     canvas {
       display: block;
@@ -47,8 +90,12 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // Paleta azul original com os tons exatos de azul neon do vídeo
+    // Paleta exata do código do vídeo
     const BLUE_SHADES = ['#38a2f6', '#00a8ff', '#256beb', '#8fe0fe', '#00d2ff', '#ffffff'];
+
+    // Quantidade moderada para garantir fluidez perfeita em qualquer dispositivo
+    const FLOAT_COUNT = 140; 
+    const floatParticles = [];
 
     // Equação paramétrica do coração real
     function getHeartPosition(t) {
@@ -57,83 +104,81 @@
       return { x, y };
     }
 
-    const HEART_PARTICLES_COUNT = 400;
-    const particles = [];
-
-    // Estado da animação: 0 = Formando/Aparecendo, 1 = Desfazendo/Explodindo
-    let state = 0; 
-    let stateTimer = 0;
-
+    // Estrutura leve de partícula
     class Particle {
       constructor() {
+        this.reset();
+      }
+
+      reset() {
         this.t = Math.random() * Math.PI * 2;
-        const pos = getHeartPosition(this.t);
-        
-        this.targetX = pos.x;
-        this.targetY = pos.y;
-        
-        this.x = (Math.random() - 0.5) * width;
-        this.y = (Math.random() - 0.5) * height;
+        const target = getHeartPosition(this.t);
+        this.targetX = target.x;
+        this.targetY = target.y;
+
+        // Posição inicial fora do coração (surgindo das bordas/base)
+        this.x = centerX + (Math.random() - 0.5) * width;
+        this.y = height + Math.random() * 50;
 
         this.vx = 0;
         this.vy = 0;
-
-        this.size = Math.random() * 2.2 + 1.2;
+        this.radius = Math.random() * 2 + 1;
         this.color = BLUE_SHADES[Math.floor(Math.random() * BLUE_SHADES.length)];
-        this.alpha = Math.random() * 0.85 + 0.15;
+        this.alpha = Math.random() * 0.8 + 0.2;
       }
 
-      update() {
-        if (state === 0) {
-          // Surgindo no formato perfeito de coração
+      update(state) {
+        if (state === 'forming') {
+          // Bolinhas entrando e formando o formato exato de coração
           const tx = centerX + this.targetX * heartScale;
           const ty = centerY + this.targetY * heartScale;
 
           const dx = tx - this.x;
           const dy = ty - this.y;
 
-          this.vx += dx * 0.035;
-          this.vy += dy * 0.035;
-          this.vx *= 0.80;
-          this.vy *= 0.80;
+          this.vx += dx * 0.02;
+          this.vy += dy * 0.02;
+          this.vx *= 0.82;
+          this.vy *= 0.82;
 
           this.x += this.vx;
           this.y += this.vy;
-        } else {
-          // Desfazendo-se e espalhando em feixes brilhantes
+        } else if (state === 'bursting') {
+          // Desfazendo em feixes e sumindo
           this.x += this.vx;
           this.y += this.vy;
           this.vx *= 0.95;
           this.vy *= 0.95;
+          this.alpha *= 0.96;
         }
       }
 
       draw() {
         ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.alpha;
+        ctx.globalAlpha = Math.max(0, this.alpha);
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
       burst() {
-        // Disparo para se desfazer
         const angle = Math.atan2(this.y - centerY, this.x - centerX) + (Math.random() - 0.5);
-        const force = Math.random() * 16 + 6;
-        this.vx = Math.cos(angle) * force;
-        this.vy = Math.sin(angle) * force - Math.random() * 8;
+        const speed = Math.random() * 12 + 4;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed - Math.random() * 6;
       }
     }
 
-    for (let i = 0; i < HEART_PARTICLES_COUNT; i++) {
-      particles.push(new Particle());
+    // Inicialização do array fixo de partículas
+    for (let i = 0; i < FLOAT_COUNT; i++) {
+      floatParticles.push(new Particle());
     }
 
-    // Portal/Base Oval Iluminada na Base
-    function drawBasePortal() {
+    // Portal azul na base
+    function drawBaseGlow() {
       const portalY = centerY + 18 * heartScale;
-      const portalWidth = 15 * heartScale;
-      const portalHeight = 3.5 * heartScale;
+      const portalWidth = 14 * heartScale;
+      const portalHeight = 3 * heartScale;
 
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
@@ -142,50 +187,64 @@
         centerX, portalY, 2,
         centerX, portalY, portalWidth
       );
-      gradient.addColorStop(0, 'rgba(0, 210, 255, 1)');
-      gradient.addColorStop(0.35, 'rgba(37, 107, 235, 0.7)');
-      gradient.addColorStop(0.7, 'rgba(56, 162, 246, 0.3)');
+      gradient.addColorStop(0, 'rgba(0, 210, 255, 0.8)');
+      gradient.addColorStop(0.5, 'rgba(37, 107, 235, 0.4)');
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.ellipse(centerX, portalY, portalWidth, portalHeight, 0, 0, Math.PI * 2);
       ctx.fill();
-
       ctx.restore();
     }
 
+    let state = 'forming';
+    let timer = 0;
+
     function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      // Limpeza eficiente com rasto leve
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
       ctx.fillRect(0, 0, width, height);
 
       ctx.globalCompositeOperation = 'lighter';
 
-      drawBasePortal();
+      drawBaseGlow();
 
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      // Renderização leve das partículas
+      for (let i = 0; i < floatParticles.length; i++) {
+        floatParticles[i].update(state);
+        floatParticles[i].draw();
+      }
 
-      stateTimer++;
+      timer++;
 
-      if (state === 0 && stateTimer > 110) {
-        state = 1;
-        stateTimer = 0;
-        particles.forEach(p => p.burst());
-      } else if (state === 1 && stateTimer > 75) {
-        state = 0;
-        stateTimer = 0;
+      // Alternância dos estados: Formar -> Exibir -> Desfazer -> Recomeçar
+      if (state === 'forming' && timer > 100) {
+        state = 'bursting';
+        timer = 0;
+        for (let i = 0; i < floatParticles.length; i++) {
+          floatParticles[i].burst();
+        }
+      } else if (state === 'bursting' && timer > 65) {
+        state = 'forming';
+        timer = 0;
+        for (let i = 0; i < floatParticles.length; i++) {
+          floatParticles[i].reset();
+        }
       }
 
       requestAnimationFrame(animate);
     }
 
+    // Clique manual para desmanchar imediatamente
     window.addEventListener('pointerdown', () => {
-      state = 1;
-      stateTimer = 0;
-      particles.forEach(p => p.burst());
+      if (state !== 'bursting') {
+        state = 'bursting';
+        timer = 0;
+        for (let i = 0; i < floatParticles.length; i++) {
+          floatParticles[i].burst();
+        }
+      }
     });
 
     animate();
